@@ -1,3 +1,5 @@
+package Data;
+
 import java.awt.geom.Point2D;
 
 public class Bullet {
