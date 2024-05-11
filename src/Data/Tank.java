@@ -4,10 +4,11 @@ package Data;
 
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Tank {
-
     private Point2D position;
     private double size;
     private double rotation;
@@ -15,6 +16,8 @@ public class Tank {
     private int speed;
     private InputHandler inputHandeler;
     double angle = Math.PI / 90;
+    private List<Bullet> bullets = new ArrayList<>();
+
 
     public Tank(InputHandler inputHandeler){
         position = new Point2D.Double(0, 0);
@@ -42,7 +45,7 @@ public class Tank {
             }
         }
         if (inputHandeler.isPressed(KeyEvent.VK_SPACE)){
-            //todo shoot
+            shoot();
         }
     }
 
@@ -56,10 +59,16 @@ public class Tank {
 //        }
 //    }
 
-    public void shoot(KeyEvent event){
-        if (event.getKeyCode() == KeyEvent.VK_SPACE){
-            //todo shoot
-        }
+    public void shoot(){
+        Bullet bullet = new Bullet(new Point2D.Double(position.getX(), position.getY()), rotation);
+        bullets.add(bullet);
+
+    }
+    public List<Bullet> getBullets(){
+        return bullets;
+    }
+    public void takeDamage() {
+        tankHealth -= 20;
     }
 
 //    public void rotate(KeyEvent event){
@@ -117,4 +126,6 @@ public class Tank {
     public void setSpeed(int speed) {
         this.speed = speed;
     }
+
+
 }
