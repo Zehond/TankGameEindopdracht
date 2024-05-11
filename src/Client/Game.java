@@ -1,5 +1,6 @@
 package Client;
 
+import Data.InputHandler;
 import Data.Map;
 import Data.Tank;
 import javafx.application.Application;
@@ -9,6 +10,7 @@ public class Game extends Application {
     private Map map;
     private Tank player;
     private Tank enemy;
+    private InputHandler inputHandler;
 
     public Game() {
 
@@ -27,8 +29,8 @@ public class Game extends Application {
     }
 
     public void Init() {
-        player = new Tank();
-        enemy = new Tank();
+        player = new Tank(this.inputHandler = new InputHandler());
+        enemy = new Tank(this.inputHandler = new InputHandler());
 
     }
 }

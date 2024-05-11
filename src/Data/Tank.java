@@ -1,37 +1,60 @@
+
 package Data;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 
-public class Tank implements KeyListener {
+import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
+
+
+public class Tank {
 
     private Point2D position;
     private double size;
     private double rotation;
     private int tankHealth;
     private int speed;
+    private InputHandler inputHandeler;
+    double angle = Math.PI / 90;
 
-    public Tank(){
-
-
+    public Tank(InputHandler inputHandeler){
+        position = new Point2D.Double(0, 0);
+        size = 10;
+        rotation = 0;
+        tankHealth = 100;
+        speed = 5;
+        this.inputHandeler = inputHandeler;
     }
 
     public void update(){
-
-    }
-
-    public void move(KeyEvent event){
-        if (event.getKeyCode() == KeyEvent.VK_W){
+        if (inputHandeler.isPressed(KeyEvent.VK_W)){
             setPosition(new Point2D.Double(position.getX() + Math.cos(rotation) * speed,
                     position.getY() + Math.sin(rotation) * speed));
-        } else if (event.getKeyCode() == KeyEvent.VK_S) {
+        }else if (inputHandeler.isPressed(KeyEvent.VK_S)){
             setPosition(new Point2D.Double(position.getX() - Math.cos(rotation) * speed,
                     position.getY() - Math.sin(rotation) * speed));
         }
+        if (inputHandeler.isPressed(KeyEvent.VK_D)){
+            rotation = (rotation + angle) % (2 * Math.PI);
+        } else if (inputHandeler.isPressed(KeyEvent.VK_A)){
+            rotation = (rotation - angle) % (2 * Math.PI);
+            if (rotation < 0){
+                rotation += 2 * Math.PI;
+            }
+        }
+        if (inputHandeler.isPressed(KeyEvent.VK_SPACE)){
+            //todo shoot
+        }
     }
+
+//    public void move(KeyEvent event){
+//        if (event.getKeyCode() == KeyEvent.VK_W){
+//            setPosition(new Point2D.Double(position.getX() + Math.cos(rotation) * speed,
+//                    position.getY() + Math.sin(rotation) * speed));
+//        } else if (event.getKeyCode() == KeyEvent.VK_S) {
+//            setPosition(new Point2D.Double(position.getX() - Math.cos(rotation) * speed,
+//                    position.getY() - Math.sin(rotation) * speed));
+//        }
+//    }
 
     public void shoot(KeyEvent event){
         if (event.getKeyCode() == KeyEvent.VK_SPACE){
@@ -39,38 +62,20 @@ public class Tank implements KeyListener {
         }
     }
 
-    public void rotate(KeyEvent event){
-        double angle = Math.PI / 90;
-        if (event.getKeyCode() == KeyEvent.VK_A){
-            rotation = (rotation + angle) % (2 * Math.PI);
-        } else if (event.getKeyCode() == KeyEvent.VK_D) {
-            rotation = (rotation - angle) % (2 * Math.PI);
-            if (rotation < 0) {
-                rotation += 2 * Math.PI;
-            }
-        }
-    }
+//    public void rotate(KeyEvent event){
+//        double angle = Math.PI / 90;
+//        if (event.getKeyCode() == KeyEvent.VK_D){
+//            rotation = (rotation + angle) % (2 * Math.PI);
+//        } else if (event.getKeyCode() == KeyEvent.VK_A) {
+//            rotation = (rotation - angle) % (2 * Math.PI);
+//            if (rotation < 0) {
+//                rotation += 2 * Math.PI;
+//            }
+//        }
+//    }
 
     public void decreaseHealth(){
         //todo if hit by bullet decrease health
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        //of doe het zo wanneer er w wordt ingedrukt dat die dan een boolean omzet, en wanneer je dan los laat wordt de boolean naar null gezet
-        //want ik weet niet of deze methode ook werkt met ingedrukt houden
-        move(e);
-        rotate(e);
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
     }
 
     public Point2D getPosition() {
