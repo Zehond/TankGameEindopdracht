@@ -1,5 +1,6 @@
 package Client;
 
+import Data.Bullet;
 import Data.InputHandler;
 import Data.Map;
 import Data.Tank;
@@ -17,6 +18,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import java.util.List;
 public class Game extends Application {
     private Map map;
     private Tank player;
@@ -63,9 +65,17 @@ public class Game extends Application {
 //        this.player.draw();
 //        this.enemy.draw();
     }
+    public void Init() {
+        player = new Tank(this.inputHandler = new InputHandler());
+        enemy = new Tank(this.inputHandler = new InputHandler());
 
     public void update(double deltaTime) {
+        player.update();
+        enemy.update();
 
+        updateBullets(player);
+        updateBullets(enemy);
+        updateCollisions();
     }
 
     public void init() {
@@ -75,9 +85,41 @@ public class Game extends Application {
         InputHandler bot = new InputHandler();
         this.enemy = new Tank(bot);
     }
+    private void updateBullets(Tank tank) {
+        List<Bullet> bullets = tank.getBullets();
+        for (Bullet bullet : bullets) {
+            bullet.update();
+            if (bulletHitWall(bullet)){
+                bullets.remove(bullet);
+            }
+        }
 
     public static void main(String[] args)
     {
         launch(Game.class);
     }
+    private boolean bulletHitWall(Bullet bullet){
+        //todo: implement this method with collision detection logic to the wall
+        return false;
+    }
+   private void checkBulletTankCollision(Tank shooter, Tank enemy){
+       List<Bullet> bullets = shooter.getBullets();
+         for (Bullet bullet : bullets){
+              if (isHitTank(bullet, enemy)){
+                enemy.takeDamage();
+                bullets.remove(bullet);
+              }
+         }
+
+   }
+    private boolean isHitTank(Bullet bullet, Tank enemy){
+        //TODO: Implement this method with collision detection logic
+        return false;
+    }
+
+    private void updateCollisions(){
+        checkBulletTankCollision(player, enemy);
+        checkBulletTankCollision(enemy, player);
+    }
+
 }
