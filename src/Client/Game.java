@@ -14,9 +14,6 @@ import org.jfree.fx.ResizableCanvas;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Collections;
 
 import java.util.List;
 public class Game extends Application {
@@ -68,6 +65,7 @@ public class Game extends Application {
     public void Init() {
         player = new Tank(this.inputHandler = new InputHandler());
         enemy = new Tank(this.inputHandler = new InputHandler());
+    }
 
     public void update(double deltaTime) {
         player.update();
@@ -93,9 +91,9 @@ public class Game extends Application {
                 bullets.remove(bullet);
             }
         }
+    }
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args){
         launch(Game.class);
     }
     private boolean bulletHitWall(Bullet bullet){
