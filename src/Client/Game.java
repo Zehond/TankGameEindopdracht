@@ -47,24 +47,20 @@ public class Game extends Application {
         }.start();
 
         stage.setScene(new Scene(mainPane));
-        stage.setTitle("Let there be light");
+        stage.setTitle("TONK");
         stage.show();
         draw(g2d);
     }
 
     public void draw(FXGraphics2D graphics) {
         graphics.setTransform(new AffineTransform());
-        graphics.setBackground(Color.black);
+        graphics.setBackground(Color.white);
         graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
 
         this.map.draw(graphics);
 
-//        this.player.draw();
-//        this.enemy.draw();
-    }
-    public void Init() {
-        player = new Tank(this.inputHandler = new InputHandler());
-        enemy = new Tank(this.inputHandler = new InputHandler());
+        this.player.draw(graphics);
+        this.enemy.draw(graphics);
     }
 
     public void update(double deltaTime) {

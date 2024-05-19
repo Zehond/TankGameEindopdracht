@@ -1,9 +1,16 @@
-
 package Data;
 
+import Data.Bullet;
+import Data.InputHandler;
+import org.jfree.fx.FXGraphics2D;
 
+import javax.imageio.ImageIO;
 import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +24,7 @@ public class Tank {
     private InputHandler inputHandeler;
     double angle = Math.PI / 90;
     private List<Bullet> bullets = new ArrayList<>();
+    private BufferedImage image;
 
 
     public Tank(InputHandler inputHandeler){
@@ -26,6 +34,11 @@ public class Tank {
         tankHealth = 100;
         speed = 5;
         this.inputHandeler = inputHandeler;
+        try {
+            image = ImageIO.read(new File(".idea/res/TONK1.0.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void update(){
@@ -62,8 +75,17 @@ public class Tank {
     public void shoot(){
         Bullet bullet = new Bullet(new Point2D.Double(position.getX(), position.getY()), rotation);
         bullets.add(bullet);
-
     }
+
+    public void draw(FXGraphics2D graphics) {
+        if (image == null) {
+            return;
+        }
+
+        AffineTransform affineTransform = new AffineTransform();
+        graphics.drawImage(image, affineTransform, null);
+    }
+
     public List<Bullet> getBullets(){
         return bullets;
     }
