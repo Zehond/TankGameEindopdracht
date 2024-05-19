@@ -2,12 +2,15 @@ package Data;
 
 import Data.Bullet;
 import Data.InputHandler;
+import javafx.scene.input.KeyCode;
 import org.jfree.fx.FXGraphics2D;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +30,7 @@ public class Tank {
     private BufferedImage image;
 
 
+
     public Tank(InputHandler inputHandeler){
         position = new Point2D.Double(200, 200);
         size = 10;
@@ -42,24 +46,25 @@ public class Tank {
     }
 
     public void update(){
-        if (inputHandeler.isPressed(KeyEvent.VK_W)){
+        if (inputHandeler.isPressed(KeyCode.W)){
             setPosition(new Point2D.Double(position.getX() + Math.cos(rotation) * speed,
                     position.getY() + Math.sin(rotation) * speed));
-        }else if (inputHandeler.isPressed(KeyEvent.VK_S)){
+        }else if (inputHandeler.isPressed(KeyCode.S)){
             setPosition(new Point2D.Double(position.getX() - Math.cos(rotation) * speed,
                     position.getY() - Math.sin(rotation) * speed));
         }
-        if (inputHandeler.isPressed(KeyEvent.VK_D)){
+        if (inputHandeler.isPressed(KeyCode.D)){
             rotation = (rotation + angle) % (2 * Math.PI);
-        } else if (inputHandeler.isPressed(KeyEvent.VK_A)){
+        } else if (inputHandeler.isPressed(KeyCode.A)){
             rotation = (rotation - angle) % (2 * Math.PI);
             if (rotation < 0){
                 rotation += 2 * Math.PI;
             }
         }
-        if (inputHandeler.isPressed(KeyEvent.VK_SPACE)){
+        if (inputHandeler.isPressed(KeyCode.SPACE)){
             shoot();
         }
+
     }
 
 //    public void move(KeyEvent event){
@@ -84,7 +89,7 @@ public class Tank {
 
         AffineTransform affineTransform = new AffineTransform();
         affineTransform.translate(position.getX(), position.getY());
-        affineTransform.rotate(rotation);
+        affineTransform.rotate(rotation + Math.PI / -2.0);
         affineTransform.scale(0.5, -0.5);
         affineTransform.translate(-image.getWidth() / 2.0, - image.getHeight() / 2.0);
 

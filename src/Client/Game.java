@@ -15,7 +15,8 @@ import org.jfree.fx.ResizableCanvas;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
-import java.awt.geom.Rectangle2D;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.List;
 public class Game extends Application {
     private Map map;
@@ -23,6 +24,8 @@ public class Game extends Application {
     private Tank enemy;
     private InputHandler inputHandler;
     private ResizableCanvas canvas;
+    private boolean hasCollision = false;
+    private ArrayList<Tank> tanks = new ArrayList<>();
 
 
     public void start(Stage stage) throws Exception {
@@ -46,8 +49,10 @@ public class Game extends Application {
                 draw(g2d);
             }
         }.start();
-
-        stage.setScene(new Scene(mainPane));
+        Scene scene = new Scene(mainPane);
+        stage.setScene(scene);
+        scene.setOnKeyPressed(e -> inputHandler.keyPressed(e));
+        scene.setOnKeyReleased(e -> inputHandler.keyReleased(e));
         stage.setTitle("TONK");
         stage.show();
         draw(g2d);
@@ -69,9 +74,21 @@ public class Game extends Application {
         player.update();
         enemy.update();
 
+
         updateBullets(player);
         updateBullets(enemy);
         updateCollisions();
+
+        if (player.getPosition().distance(enemy.getPosition()) <= 126){
+            hasCollision = true;//todo kijk of je de collision detection kan verbeteren door middel van een magic getal een waarde van de hoogte van de tank te hebben.
+            System.out.println("collision detected");
+        }
+
+        if (hasCollision){
+            player.takeDamage();
+            enemy.takeDamage();
+            bounceOffTank(enemy);
+        }
     }
 
     public void init() {
@@ -116,6 +133,20 @@ public class Game extends Application {
     private void updateCollisions(){
         checkBulletTankCollision(player, enemy);
         checkBulletTankCollision(enemy, player);
+    }
+
+    public void bounceOffTank(Tank other){
+        //todo verbeter deze methode
+        double Vx = other.getPosition().getX() - this.player.getPosition().getX();
+        double Vy = other.getPosition().getY() - this.player.getPosition().getY();
+        double angle = Math.atan2(Vy,Vx);
+
+        double bounce = 5;
+        this.player.setPosition
+                (new Point2D.Double(this.player.getPosition().getX()
+                        - bounce * Math.cos(angle),
+                        this.player.getPosition().getY() -
+                                bounce * Math.sin(angle)));
     }
 
 }
