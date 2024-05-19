@@ -15,6 +15,7 @@ import org.jfree.fx.ResizableCanvas;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
+import java.awt.geom.Rectangle2D;
 import java.util.List;
 public class Game extends Application {
     private Map map;
@@ -61,6 +62,7 @@ public class Game extends Application {
 
         this.player.draw(graphics);
         this.enemy.draw(graphics);
+
     }
 
     public void update(double deltaTime) {

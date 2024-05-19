@@ -28,7 +28,7 @@ public class Tank {
 
 
     public Tank(InputHandler inputHandeler){
-        position = new Point2D.Double(0, 0);
+        position = new Point2D.Double(200, 200);
         size = 10;
         rotation = 0;
         tankHealth = 100;
@@ -83,6 +83,11 @@ public class Tank {
         }
 
         AffineTransform affineTransform = new AffineTransform();
+        affineTransform.translate(position.getX(), position.getY());
+        affineTransform.rotate(rotation);
+        affineTransform.scale(0.5, -0.5);
+        affineTransform.translate(-image.getWidth() / 2.0, - image.getHeight() / 2.0);
+
         graphics.drawImage(image, affineTransform, null);
     }
 
