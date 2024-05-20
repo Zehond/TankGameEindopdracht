@@ -69,15 +69,6 @@ public class Tank {
         rotation = (rotation + angle) % (2 * Math.PI);
     }
 
-//    public void move(KeyEvent event){
-//        if (event.getKeyCode() == KeyEvent.VK_W){
-//            setPosition(new Point2D.Double(position.getX() + Math.cos(rotation) * speed,
-//                    position.getY() + Math.sin(rotation) * speed));
-//        } else if (event.getKeyCode() == KeyEvent.VK_S) {
-//            setPosition(new Point2D.Double(position.getX() - Math.cos(rotation) * speed,
-//                    position.getY() - Math.sin(rotation) * speed));
-//        }
-//    }
 
     public void draw(FXGraphics2D graphics) {
         if (image == null) {
@@ -92,21 +83,22 @@ public class Tank {
 
         graphics.drawImage(image, affineTransform, null);
     }
-    public void takeDamage() {
-        tankHealth -= 20;
+    public void takeDamageBody() {
+        tankHealth %= 5;
     }
 
-//    public void rotate(KeyEvent event){
-//        double angle = Math.PI / 90;
-//        if (event.getKeyCode() == KeyEvent.VK_D){
-//            rotation = (rotation + angle) % (2 * Math.PI);
-//        } else if (event.getKeyCode() == KeyEvent.VK_A) {
-//            rotation = (rotation - angle) % (2 * Math.PI);
-//            if (rotation < 0) {
-//                rotation += 2 * Math.PI;
-//            }
-//        }
-//    }
+    public void pushAwayFrom(Tank other) {
+        double dx = position.getX() - other.getPosition().getX();
+        double dy = position.getY() - other.getPosition().getY();
+        double distance = Math.sqrt(dx * dx + dy * dy);
+
+        double nx = dx / distance;
+        double ny = dy / distance;
+
+        setPosition(new Point2D.Double(position.getX() + nx * speed,
+                position.getY() + ny * speed));
+    }
+
 
     public void decreaseHealth(){
         //todo if hit by bullet decrease health

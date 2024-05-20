@@ -51,7 +51,10 @@ public class Game extends Application {
             }
         }.start();
 
-        stage.setScene(new Scene(mainPane));
+        Scene scene = new Scene(mainPane);
+        stage.setScene(scene);
+        scene.setOnKeyPressed(e -> inputHandler.keyPressed(e));
+        scene.setOnKeyReleased(e -> inputHandler.keyReleased(e));
         stage.setTitle("TONK");
         stage.show();
         draw(g2d);
@@ -71,7 +74,17 @@ public class Game extends Application {
     public void update(double deltaTime) {
         player.update();
         enemy.update();
-
+        inputHandling();
+        if(player.getPosition().distance(enemy.getPosition()) < 100){
+            player.takeDamageBody();//todo maak een interval zodat de tank niet te snel schade krijgt
+            enemy.takeDamageBody();//kan veranderd worden voor een rectangle2D om zo de collision te bepalen
+            player.pushAwayFrom(enemy);
+            enemy.pushAwayFrom(player);
+        }
+        if (player.getTankHealth() <= 0 || enemy.getTankHealth() <= 0){
+            System.out.println("Game Over");
+                //System.exit(0);
+        }
 //        updateBullets(player);
 //        updateBullets(enemy);
 //        updateCollisions();
@@ -81,7 +94,7 @@ public class Game extends Application {
         inputHandler = new InputHandler();
         Bullets = new ArrayList<>();
         this.map = new Map();
-        this.player = new Tank(new Point2D.Double(1000, 200));
+        this.player = new Tank(new Point2D.Double(330, 200));
         this.enemy = new Tank(new Point2D.Double(200, 200));
     }
 
