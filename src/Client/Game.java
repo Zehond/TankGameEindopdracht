@@ -7,6 +7,7 @@ import Data.Tank;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.jfree.fx.FXGraphics2D;
@@ -16,6 +17,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 public class Game extends Application {
@@ -24,8 +26,7 @@ public class Game extends Application {
     private Tank enemy;
     private InputHandler inputHandler;
     private ResizableCanvas canvas;
-    private boolean hasCollision = false;
-    private ArrayList<Tank> tanks = new ArrayList<>();
+    private ArrayList<Bullet> Bullets;
 
 
     public void start(Stage stage) throws Exception {
@@ -49,10 +50,8 @@ public class Game extends Application {
                 draw(g2d);
             }
         }.start();
-        Scene scene = new Scene(mainPane);
-        stage.setScene(scene);
-        scene.setOnKeyPressed(e -> inputHandler.keyPressed(e));
-        scene.setOnKeyReleased(e -> inputHandler.keyReleased(e));
+
+        stage.setScene(new Scene(mainPane));
         stage.setTitle("TONK");
         stage.show();
         draw(g2d);
@@ -67,86 +66,79 @@ public class Game extends Application {
 
         this.player.draw(graphics);
         this.enemy.draw(graphics);
-
     }
 
     public void update(double deltaTime) {
         player.update();
         enemy.update();
 
-
-        updateBullets(player);
-        updateBullets(enemy);
-        updateCollisions();
-
-        if (player.getPosition().distance(enemy.getPosition()) <= 126){
-            hasCollision = true;//todo kijk of je de collision detection kan verbeteren door middel van een magic getal een waarde van de hoogte van de tank te hebben.
-            System.out.println("collision detected");
-        }
-
-        if (hasCollision){
-            player.takeDamage();
-            enemy.takeDamage();
-            bounceOffTank(enemy);
-        }
+//        updateBullets(player);
+//        updateBullets(enemy);
+//        updateCollisions();
     }
 
     public void init() {
         inputHandler = new InputHandler();
+        Bullets = new ArrayList<>();
         this.map = new Map();
-        this.player = new Tank(this.inputHandler);
-        InputHandler bot = new InputHandler();
-        this.enemy = new Tank(bot);
+        this.player = new Tank(new Point2D.Double(1000, 200));
+        this.enemy = new Tank(new Point2D.Double(200, 200));
     }
-    private void updateBullets(Tank tank) {
-        List<Bullet> bullets = tank.getBullets();
-        for (Bullet bullet : bullets) {
-            bullet.update();
-            if (bulletHitWall(bullet)){
-                bullets.remove(bullet);
-            }
+
+    private void addBullet(Point2D position, double direction) {
+        this.Bullets.add(new Bullet(position, direction));
+    }
+
+    private void inputHandling() {
+        if (inputHandler.isPressed(KeyCode.W)){
+            player.forward();
+        }else if (inputHandler.isPressed(KeyCode.S)){
+            player.backward();
+        }
+        if (inputHandler.isPressed(KeyCode.D)){
+            player.turnRight();
+        } else if (inputHandler.isPressed(KeyCode.A)){
+            player.turnLeft();
+        }
+        if (inputHandler.isPressed(KeyCode.SPACE)){
+            this.addBullet(player.getPosition(), player.getRotation());
         }
     }
+//    private void updateBullets(Tank tank) {
+//        List<Bullet> bullets = tank.getBullets();
+//        for (Bullet bullet : bullets) {
+//            bullet.update();
+//            if (bulletHitWall(bullet)){
+//                bullets.remove(bullet);
+//            }
+//        }
+//    }
 
     public static void main(String[] args){
         launch(Game.class);
     }
-    private boolean bulletHitWall(Bullet bullet){
-        //todo: implement this method with collision detection logic to the wall
-        return false;
-    }
-   private void checkBulletTankCollision(Tank shooter, Tank enemy){
-       List<Bullet> bullets = shooter.getBullets();
-         for (Bullet bullet : bullets){
-              if (isHitTank(bullet, enemy)){
-                enemy.takeDamage();
-                bullets.remove(bullet);
-              }
-         }
+//    private boolean bulletHitWall(Bullet bullet){
+//        //todo: implement this method with collision detection logic to the wall
+//        return false;
+//    }
+//   private void checkBulletTankCollision(Tank shooter, Tank enemy){
+//       List<Bullet> bullets = shooter.getBullets();
+//         for (Bullet bullet : bullets){
+//              if (isHitTank(bullet, enemy)){
+//                enemy.takeDamage();
+//                bullets.remove(bullet);
+//              }
+//         }
+//
+//   }
+//    private boolean isHitTank(Bullet bullet, Tank enemy){
+//        //TODO: Implement this method with collision detection logic
+//        return false;
+//    }
 
-   }
-    private boolean isHitTank(Bullet bullet, Tank enemy){
-        //TODO: Implement this method with collision detection logic
-        return false;
-    }
-
-    private void updateCollisions(){
-        checkBulletTankCollision(player, enemy);
-        checkBulletTankCollision(enemy, player);
-    }
-
-    public void bounceOffTank(Tank other){
-        //todo verbeter deze methode
-        double Vx = other.getPosition().getX() - this.player.getPosition().getX();
-        double Vy = other.getPosition().getY() - this.player.getPosition().getY();
-        double angle = Math.atan2(Vy,Vx);
-
-        double bounce = 5;
-        this.player.setPosition
-                (new Point2D.Double(this.player.getPosition().getX()
-                        - bounce * Math.cos(angle),
-                        this.player.getPosition().getY() -
-                                bounce * Math.sin(angle)));
-    }
+//    private void updateCollisions(){
+//        checkBulletTankCollision(player, enemy);
+//        checkBulletTankCollision(enemy, player);
+//    }
 
 }

@@ -1,5 +1,6 @@
 package Data;
 
+import Client.Game;
 import Data.Bullet;
 import Data.InputHandler;
 import javafx.scene.input.KeyCode;
@@ -26,18 +27,16 @@ public class Tank {
     private int speed;
     private InputHandler inputHandeler;
     double angle = Math.PI / 90;
-    private List<Bullet> bullets = new ArrayList<>();
     private BufferedImage image;
 
 
 
-    public Tank(InputHandler inputHandeler){
-        position = new Point2D.Double(200, 200);
+    public Tank(Point2D position){
+        this.position = position;
         size = 10;
         rotation = 0;
         tankHealth = 100;
         speed = 5;
-        this.inputHandeler = inputHandeler;
         try {
             image = ImageIO.read(new File(".idea/res/TONK1.0.png"));
         } catch (IOException e) {
@@ -46,25 +45,28 @@ public class Tank {
     }
 
     public void update(){
-        if (inputHandeler.isPressed(KeyCode.W)){
-            setPosition(new Point2D.Double(position.getX() + Math.cos(rotation) * speed,
-                    position.getY() + Math.sin(rotation) * speed));
-        }else if (inputHandeler.isPressed(KeyCode.S)){
-            setPosition(new Point2D.Double(position.getX() - Math.cos(rotation) * speed,
-                    position.getY() - Math.sin(rotation) * speed));
-        }
-        if (inputHandeler.isPressed(KeyCode.D)){
-            rotation = (rotation + angle) % (2 * Math.PI);
-        } else if (inputHandeler.isPressed(KeyCode.A)){
-            rotation = (rotation - angle) % (2 * Math.PI);
-            if (rotation < 0){
-                rotation += 2 * Math.PI;
-            }
-        }
-        if (inputHandeler.isPressed(KeyCode.SPACE)){
-            shoot();
-        }
 
+    }
+
+    public void forward() {
+        setPosition(new Point2D.Double(position.getX() + Math.cos(rotation) * speed,
+                position.getY() + Math.sin(rotation) * speed));
+    }
+
+    public void backward() {
+        setPosition(new Point2D.Double(position.getX() - Math.cos(rotation) * speed,
+                position.getY() - Math.sin(rotation) * speed));
+    }
+
+    public void turnLeft() {
+        rotation = (rotation - angle) % (2 * Math.PI);
+        if (rotation < 0){
+            rotation += 2 * Math.PI;
+        }
+    }
+
+    public void turnRight() {
+        rotation = (rotation + angle) % (2 * Math.PI);
     }
 
 //    public void move(KeyEvent event){
@@ -76,11 +78,6 @@ public class Tank {
 //                    position.getY() - Math.sin(rotation) * speed));
 //        }
 //    }
-
-    public void shoot(){
-        Bullet bullet = new Bullet(new Point2D.Double(position.getX(), position.getY()), rotation);
-        bullets.add(bullet);
-    }
 
     public void draw(FXGraphics2D graphics) {
         if (image == null) {
@@ -94,10 +91,6 @@ public class Tank {
         affineTransform.translate(-image.getWidth() / 2.0, - image.getHeight() / 2.0);
 
         graphics.drawImage(image, affineTransform, null);
-    }
-
-    public List<Bullet> getBullets(){
-        return bullets;
     }
     public void takeDamage() {
         tankHealth -= 20;
