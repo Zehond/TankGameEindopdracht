@@ -27,10 +27,16 @@ public class Game extends Application {
     private InputHandler inputHandler;
     private ResizableCanvas canvas;
     private ArrayList<Bullet> Bullets;
+    private long lastBulletTime;
+    private final long BULLET_DELAY = 500;
 
 
+    public Game() {
+        this.lastBulletTime = System.currentTimeMillis();
+    }
     public void start(Stage stage) throws Exception {
         init();
+
 
         BorderPane mainPane = new BorderPane();
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
@@ -112,6 +118,7 @@ public class Game extends Application {
     }
 
     private void inputHandling() {
+        long currentTime = System.currentTimeMillis();
         if (inputHandler.isPressed(KeyCode.W)){
             player.forward();
         }else if (inputHandler.isPressed(KeyCode.S)){
@@ -122,8 +129,9 @@ public class Game extends Application {
         } else if (inputHandler.isPressed(KeyCode.A)){
             player.turnLeft();
         }
-        if (inputHandler.isPressed(KeyCode.SPACE)){             //TODO zet er een delay op
+        if (inputHandler.isPressed(KeyCode.SPACE ) && currentTime - lastBulletTime >= BULLET_DELAY){             //TODO zet er een delay op
             this.addBullet(player.getPosition(), player.getRotation());
+            lastBulletTime = currentTime;
         }
     }
 //    private void updateBullets(Tank tank) {
