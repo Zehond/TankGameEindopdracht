@@ -27,10 +27,16 @@ public class Game extends Application {
     private InputHandler inputHandler;
     private ResizableCanvas canvas;
     private ArrayList<Bullet> Bullets;
+    private long lastBulletTime;
+    private final long BULLET_DELAY = 500;
 
 
+    public Game() {
+        this.lastBulletTime = System.currentTimeMillis();
+    }
     public void start(Stage stage) throws Exception {
         init();
+
 
         BorderPane mainPane = new BorderPane();
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
@@ -103,8 +109,8 @@ public class Game extends Application {
         this.map = new Map(new Point2D.Double(1920/2.0, 1080/2.0));
         this.player = new Tank(this.map.getSpawnPoint(), true);
         this.enemy = new Tank(this.map.getSpawnPoint(), false);
-//        this.player = new Tank(new Point2D.Double(200, 200), true);
-//        this.enemy = new Tank(new Point2D.Double(400, 200), false);
+        this.player = new Tank(new Point2D.Double(200, 200), true);
+        this.enemy = new Tank(new Point2D.Double(400, 200), false);
     }
 
     private void addBullet(Point2D position, double direction) {
@@ -112,6 +118,7 @@ public class Game extends Application {
     }
 
     private void inputHandling() {
+        long currentTime = System.currentTimeMillis();
         if (inputHandler.isPressed(KeyCode.W)){
             player.forward();
         }else if (inputHandler.isPressed(KeyCode.S)){
@@ -122,8 +129,9 @@ public class Game extends Application {
         } else if (inputHandler.isPressed(KeyCode.A)){
             player.turnLeft();
         }
-        if (inputHandler.isPressed(KeyCode.SPACE)){             //TODO zet er een delay op
+        if (inputHandler.isPressed(KeyCode.SPACE ) && currentTime - lastBulletTime >= BULLET_DELAY){             //TODO zet er een delay op
             this.addBullet(player.getPosition(), player.getRotation());
+            lastBulletTime = currentTime;
         }
     }
 //    private void updateBullets(Tank tank) {

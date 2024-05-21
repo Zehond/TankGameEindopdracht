@@ -20,11 +20,9 @@ public class Map {
 
     public Map(Point2D middlePoint) {
         this.middlePoint = middlePoint;
+        xOffset = middlePoint.getX() - size;
+        yOffset = middlePoint.getY() - size;
         size = 800;
-        xOffset = middlePoint.getX() - size/2;
-        yOffset = middlePoint.getY() - size/2;
-        System.out.println(xOffset);
-        System.out.println(yOffset);
         walls = new ArrayList<>();
         spawnPoints = new ArrayList<>();
         init();
@@ -32,35 +30,18 @@ public class Map {
 
     public void init() {   //Gaat weg maar bestaat om te testen met een map
         walls.add(new Rectangle2D.Double(middlePoint.getX() - size/2 , middlePoint.getY() - size/2 , size, size));
-        walls.add(new Line2D.Double(200 + xOffset, 0 + yOffset, 200 + xOffset, 300 + yOffset));
-        walls.add(new Line2D.Double(300 + xOffset, 0 + yOffset, 300 + xOffset, 100 + yOffset));
-        walls.add(new Line2D.Double(800 + xOffset, 200 + yOffset, 500 + xOffset, 200 + yOffset));
-        walls.add(new Line2D.Double(600 + xOffset, 800 + yOffset, 600 + xOffset, 400 + yOffset));
-        walls.add(new Line2D.Double(300 + xOffset, 800 + yOffset, 300 + xOffset, 700 + yOffset));
-        walls.add(new Line2D.Double(200 + xOffset, 800 + yOffset, 200 + xOffset, 500 + yOffset));
-        walls.add(new Line2D.Double(0 + xOffset, 400 + yOffset, 300 + xOffset, 400 + yOffset));
-
-        walls.add(new Line2D.Double(200 + xOffset, 200 + yOffset, 300 + xOffset, 200 + yOffset));
-        walls.add(new Line2D.Double(300 + xOffset, 100 + yOffset, 400 + xOffset, 100 + yOffset));
-        walls.add(new Line2D.Double(600 + xOffset, 100 + yOffset, 500 + xOffset, 100 + yOffset));
-        walls.add(new Line2D.Double(600 + xOffset, 100 + yOffset, 600 + xOffset, 300 + yOffset));
-        walls.add(new Line2D.Double(700 + xOffset, 600 + yOffset, 600 + xOffset, 600 + yOffset));
-        walls.add(new Line2D.Double(600 + xOffset, 500 + yOffset, 500 + xOffset, 500 + yOffset));
-        walls.add(new Line2D.Double(400 + xOffset, 100 + yOffset, 400 + xOffset, 200 + yOffset));
-        walls.add(new Line2D.Double(300 + xOffset, 400 + yOffset, 300 + xOffset, 500 + yOffset));
-        walls.add(new Line2D.Double(300 + xOffset, 600 + yOffset, 200 + xOffset, 600 + yOffset));
-        walls.add(new Line2D.Double(0 + xOffset, 600 + yOffset, 100 + xOffset, 600 + yOffset));
-        walls.add(new Line2D.Double(100 + xOffset, 600 + yOffset, 100 + xOffset, 500 + yOffset));
-        walls.add(new Line2D.Double(100 + xOffset, 400 + yOffset, 100 + xOffset, 300 + yOffset));
-        walls.add(new Line2D.Double(700 + xOffset, 500 + yOffset, 800 + xOffset, 500 + yOffset));
-
-        walls.add(new Line2D.Double(400 + xOffset, 300 + yOffset, 400 + xOffset, 700 + yOffset));
-        walls.add(new Line2D.Double(400 + xOffset, 600 + yOffset, 500 + xOffset, 600 + yOffset));
-
-        spawnPoints.add(new Point2D.Double(100 + xOffset, 100 + yOffset));
-        spawnPoints.add(new Point2D.Double(700 + xOffset, 100 + yOffset));
-        spawnPoints.add(new Point2D.Double(100 + xOffset, 700 + yOffset));
-        spawnPoints.add(new Point2D.Double(700 + xOffset, 700 + yOffset));
+        walls.add(new Line2D.Double(100 + xOffset, 0 + yOffset, 100 + xOffset, 200 + yOffset));
+        walls.add(new Line2D.Double(200 + xOffset, 0 + yOffset, 200 + xOffset, 100 + yOffset));
+        walls.add(new Line2D.Double(800 + xOffset, 200 + yOffset, 600 + xOffset, 200 + yOffset));
+        walls.add(new Line2D.Double(650 + xOffset, 800 + yOffset, 650 + xOffset, 400 + yOffset));
+        walls.add(new Line2D.Double(100 + xOffset, 0 + yOffset, 100 + xOffset, 200 + yOffset));
+        walls.add(new Line2D.Double(100 + xOffset, 0 + yOffset, 100 + xOffset, 200 + yOffset));
+        walls.add(new Line2D.Double(100 + xOffset, 0 + yOffset, 100 + xOffset, 200 + yOffset));
+        walls.add(new Line2D.Double(100 + xOffset, 0 + yOffset, 100 + xOffset, 200 + yOffset));
+        spawnPoints.add(new Point2D.Double(50 + xOffset, 50 + yOffset));
+        spawnPoints.add(new Point2D.Double(750 + xOffset, 50 + yOffset));
+        spawnPoints.add(new Point2D.Double(50 + xOffset, 750 + yOffset));
+        spawnPoints.add(new Point2D.Double(750 + xOffset, 750 + yOffset));
     }
 
     private Random random = new Random();
