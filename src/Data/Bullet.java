@@ -8,6 +8,7 @@ import java.awt.geom.Point2D;
 
 public class Bullet {
     private Point2D position;
+    private Ellipse2D sprite;
     private double speed;
     private double direction;
     private double size;
@@ -26,10 +27,12 @@ public class Bullet {
         double ny = speed * Math.sin(direction);
 
         position.setLocation(position.getX() + nx, position.getY() + ny);
+        sprite = new Ellipse2D.Double(position.getX(), position.getY(), size, size);
     }
 
     public void draw(FXGraphics2D graphics2D) {
         graphics2D.setColor(Color.black);
-        graphics2D.draw(new Ellipse2D.Double(position.getX(), position.getY(), size, size));
+        graphics2D.draw(sprite);
+        graphics2D.fill(sprite);
     }
 }
