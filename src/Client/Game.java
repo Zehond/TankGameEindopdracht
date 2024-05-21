@@ -101,8 +101,10 @@ public class Game extends Application {
         inputHandler = new InputHandler();
         Bullets = new ArrayList<>();
         this.map = new Map(new Point2D.Double(1920/2.0, 1080/2.0));
-        this.player = new Tank(new Point2D.Double(330, 200), true);
-        this.enemy = new Tank(new Point2D.Double(200, 200), false);
+        this.player = new Tank(this.map.getSpawnPoint(), true);
+        this.enemy = new Tank(this.map.getSpawnPoint(), false);
+        this.player = new Tank(new Point2D.Double(200, 200), true);
+        this.enemy = new Tank(new Point2D.Double(400, 200), false);
     }
 
     private void addBullet(Point2D position, double direction) {
