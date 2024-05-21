@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -28,18 +29,24 @@ public class Tank {
     private InputHandler inputHandeler;
     double angle = Math.PI / 90;
     private BufferedImage image;
+    private BufferedImage tankSprite;
 
 
 
-    public Tank(Point2D position){
+    public Tank(Point2D position, boolean player){
         this.position = position;
         size = 10;
         rotation = 0;
         tankHealth = 100;
-        speed = 5;
-        try {
-            image = ImageIO.read(new File(".idea/res/TONK1.0.png"));
-        } catch (IOException e) {
+        speed = 1;
+        try{
+            image = ImageIO.read(new File(".idea/res/TONK 2.0.png"));
+            if (player) {
+                tankSprite = image.getSubimage(17, 24, 61, 42);
+            } else {
+                tankSprite = image.getSubimage(116, 23, 61, 42);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -71,17 +78,17 @@ public class Tank {
 
 
     public void draw(FXGraphics2D graphics) {
-        if (image == null) {
+        if (image == null || tankSprite == null) {
             return;
         }
 
         AffineTransform affineTransform = new AffineTransform();
         affineTransform.translate(position.getX(), position.getY());
-        affineTransform.rotate(rotation + Math.PI / -2.0);
-        affineTransform.scale(0.5, -0.5);
-        affineTransform.translate(-image.getWidth() / 2.0, - image.getHeight() / 2.0);
+        affineTransform.rotate(rotation);
+        affineTransform.scale(1, -1);
+        affineTransform.translate(-tankSprite.getWidth() / 2.0, - tankSprite.getHeight() / 2.0);
 
-        graphics.drawImage(image, affineTransform, null);
+        graphics.drawImage(tankSprite, affineTransform, null);
     }
     public void takeDamageBody() {
         tankHealth %= 5;

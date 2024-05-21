@@ -67,6 +67,10 @@ public class Game extends Application {
 
         this.map.draw(graphics);
 
+        for (Bullet bullet : Bullets) {
+            bullet.draw(graphics);
+        }
+
         this.player.draw(graphics);
         this.enemy.draw(graphics);
     }
@@ -74,17 +78,20 @@ public class Game extends Application {
     public void update(double deltaTime) {
         player.update();
         enemy.update();
+        for (Bullet bullet : Bullets) {
+            bullet.update();
+        }
         inputHandling();
-        if(player.getPosition().distance(enemy.getPosition()) < 100){
-            player.takeDamageBody();//todo maak een interval zodat de tank niet te snel schade krijgt
-            enemy.takeDamageBody();//kan veranderd worden voor een rectangle2D om zo de collision te bepalen
-            player.pushAwayFrom(enemy);
-            enemy.pushAwayFrom(player);
-        }
-        if (player.getTankHealth() <= 0 || enemy.getTankHealth() <= 0){
-            System.out.println("Game Over");
-                //System.exit(0);
-        }
+//        if(player.getPosition().distance(enemy.getPosition()) < 100){
+//            player.takeDamageBody();//todo maak een interval zodat de tank niet te snel schade krijgt
+//            enemy.takeDamageBody();//kan veranderd worden voor een rectangle2D om zo de collision te bepalen
+//            player.pushAwayFrom(enemy);
+//            enemy.pushAwayFrom(player);
+//        }
+//        if (player.getTankHealth() <= 0 || enemy.getTankHealth() <= 0){
+//            System.out.println("Game Over");
+//                //System.exit(0);
+//        }
 //        updateBullets(player);
 //        updateBullets(enemy);
 //        updateCollisions();
@@ -93,9 +100,9 @@ public class Game extends Application {
     public void init() {
         inputHandler = new InputHandler();
         Bullets = new ArrayList<>();
-        this.map = new Map();
-        this.player = new Tank(new Point2D.Double(330, 200));
-        this.enemy = new Tank(new Point2D.Double(200, 200));
+        this.map = new Map(new Point2D.Double(1920/2.0, 1080/2.0));
+        this.player = new Tank(new Point2D.Double(330, 200), true);
+        this.enemy = new Tank(new Point2D.Double(200, 200), false);
     }
 
     private void addBullet(Point2D position, double direction) {
@@ -113,7 +120,7 @@ public class Game extends Application {
         } else if (inputHandler.isPressed(KeyCode.A)){
             player.turnLeft();
         }
-        if (inputHandler.isPressed(KeyCode.SPACE)){
+        if (inputHandler.isPressed(KeyCode.SPACE)){             //TODO zet er een delay op
             this.addBullet(player.getPosition(), player.getRotation());
         }
     }
