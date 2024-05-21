@@ -13,7 +13,7 @@ import java.util.Random;
 public class Map {
     private double size;
     private Point2D middlePoint;
-    private ArrayList<Shape> walls;
+    private ArrayList<Rectangle2D> walls;
     private ArrayList<Point2D> spawnPoints;
     private double xOffset;
     private double yOffset;
@@ -102,13 +102,13 @@ public class Map {
         return spawnPoints.get(random.nextInt(spawnPoints.size()));
     }
 
-    public ArrayList<Shape> getWalls() {
+    public ArrayList<Rectangle2D> getWalls() {
         return walls;
     }
 
 
     public void draw(FXGraphics2D graphics2D) {
-
+        graphics2D.setColor(Color.black);
         for (Shape shape : walls) {
             graphics2D.fill(shape);
             graphics2D.draw(shape);

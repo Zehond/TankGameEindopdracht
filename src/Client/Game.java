@@ -7,6 +7,8 @@ import Data.Tank;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -116,14 +118,14 @@ public class Game extends Application {
     private void inputHandling() {
         long currentTime = System.currentTimeMillis();
         if (inputHandler.isPressed(KeyCode.W)){
-            player.forward();
+            player.forward(map.getWalls());
         }else if (inputHandler.isPressed(KeyCode.S)){
-            player.backward();
+            player.backward(map.getWalls());
         }
         if (inputHandler.isPressed(KeyCode.D)){
-            player.turnRight();
+            player.turnRight(map.getWalls());
         } else if (inputHandler.isPressed(KeyCode.A)){
-            player.turnLeft();
+            player.turnLeft(map.getWalls());
         }
         if (inputHandler.isPressed(KeyCode.SPACE ) && currentTime - lastBulletTime >= BULLET_DELAY){             //TODO zet er een delay op
             this.addBullet(player.getPosition(), player.getRotation());
@@ -132,24 +134,33 @@ public class Game extends Application {
     }
 
     public void collision() {
-        bulletCollision();
+        bulletWallCollision();
     }
 
-    public void bulletCollision() {
+    public void bulletWallCollision() {
         ArrayList<Bullet> test = new ArrayList<>();
-        boolean hasHitWall = false;
+        boolean hasHitSomething = false;
         for (Bullet bullet : Bullets) {
-            hasHitWall = false;
+            hasHitSomething = false;
             for (Shape shape : map.getWalls()) {
                 if (shape.contains(bullet.getPosition())) {
-                    hasHitWall = true;
+                    hasHitSomething = true;
                 }
             }
-            if (!hasHitWall) {
+            if (enemy.HitsTank(bullet)) {
+                hasHitSomething = true;
+                enemy.gotHit();
+            }
+
+            if (!hasHitSomething) {
                 test.add(bullet);
             }
         }
         this.Bullets = test;
+    }
+
+    public void BulletTankCollision() {
+
     }
 
     public static void main(String[] args){
