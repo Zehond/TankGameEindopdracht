@@ -88,6 +88,7 @@ public class Game extends Application {
             bullet.update();
         }
         inputHandling();
+        collision();
 //        if(player.getPosition().distance(enemy.getPosition()) < 100){
 //            player.takeDamageBody();//todo maak een interval zodat de tank niet te snel schade krijgt
 //            enemy.takeDamageBody();//kan veranderd worden voor een rectangle2D om zo de collision te bepalen
@@ -98,9 +99,6 @@ public class Game extends Application {
 //            System.out.println("Game Over");
 //                //System.exit(0);
 //        }
-//        updateBullets(player);
-//        updateBullets(enemy);
-//        updateCollisions();
     }
 
     public void init() {
@@ -109,8 +107,6 @@ public class Game extends Application {
         this.map = new Map(new Point2D.Double(1920/2.0, 1080/2.0));
         this.player = new Tank(this.map.getSpawnPoint(), true);
         this.enemy = new Tank(this.map.getSpawnPoint(), false);
-        this.player = new Tank(new Point2D.Double(200, 200), true);
-        this.enemy = new Tank(new Point2D.Double(400, 200), false);
     }
 
     private void addBullet(Point2D position, double direction) {
@@ -134,41 +130,29 @@ public class Game extends Application {
             lastBulletTime = currentTime;
         }
     }
-//    private void updateBullets(Tank tank) {
-//        List<Bullet> bullets = tank.getBullets();
-//        for (Bullet bullet : bullets) {
-//            bullet.update();
-//            if (bulletHitWall(bullet)){
-//                bullets.remove(bullet);
-//            }
-//        }
-//    }
+
+    public void collision() {
+        bulletCollision();
+    }
+
+    public void bulletCollision() {
+        ArrayList<Bullet> test = new ArrayList<>();
+        boolean hasHitWall = false;
+        for (Bullet bullet : Bullets) {
+            hasHitWall = false;
+            for (Shape shape : map.getWalls()) {
+                if (shape.contains(bullet.getPosition())) {
+                    hasHitWall = true;
+                }
+            }
+            if (!hasHitWall) {
+                test.add(bullet);
+            }
+        }
+        this.Bullets = test;
+    }
 
     public static void main(String[] args){
         launch(Game.class);
     }
-//    private boolean bulletHitWall(Bullet bullet){
-//        //todo: implement this method with collision detection logic to the wall
-//        return false;
-//    }
-//   private void checkBulletTankCollision(Tank shooter, Tank enemy){
-//       List<Bullet> bullets = shooter.getBullets();
-//         for (Bullet bullet : bullets){
-//              if (isHitTank(bullet, enemy)){
-//                enemy.takeDamage();
-//                bullets.remove(bullet);
-//              }
-//         }
-//
-//   }
-//    private boolean isHitTank(Bullet bullet, Tank enemy){
-//        //TODO: Implement this method with collision detection logic
-//        return false;
-//    }
-
-//    private void updateCollisions(){
-//        checkBulletTankCollision(player, enemy);
-//        checkBulletTankCollision(enemy, player);
-//    }
-
 }

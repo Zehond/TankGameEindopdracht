@@ -17,12 +17,11 @@ public class Bullet {
         this.size = 4;
         this.position = new Point2D.Double(position.getX() - size/2, position.getY() - size/2);
         this.direction = direction;
-        this.speed = 10.0;
+        this.speed = 6.0;
+        sprite = new Ellipse2D.Double(position.getX(), position.getY(), size, size);
     }
 
     public void update() {
-
-
         double nx = speed * Math.cos(direction);
         double ny = speed * Math.sin(direction);
 
@@ -34,5 +33,9 @@ public class Bullet {
         graphics2D.setColor(Color.black);
         graphics2D.draw(sprite);
         graphics2D.fill(sprite);
+    }
+
+    public Point2D getPosition() {
+        return position;
     }
 }
