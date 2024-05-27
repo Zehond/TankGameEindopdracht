@@ -59,8 +59,7 @@ public class Tank {
             setPosition(newPosition);
         }
 
-//        setPosition(new Point2D.Double(position.getX() + Math.cos(rotation) * speed,
-//                position.getY() + Math.sin(rotation) * speed));
+
     }
 
     public void backward(ArrayList<Rectangle2D> walls) {
@@ -70,8 +69,6 @@ public class Tank {
             setPosition(newPosition);
         }
 
-//        setPosition(new Point2D.Double(position.getX() - Math.cos(rotation) * speed,
-//                position.getY() - Math.sin(rotation) * speed));
     }
 
     public void turnLeft(ArrayList<Rectangle2D> walls) {
@@ -83,10 +80,7 @@ public class Tank {
             rotation = newRotation;
         }
 
-//        rotation = (rotation - angle) % (2 * Math.PI);
-//        if (rotation < 0){
-//            rotation += 2 * Math.PI;
-//        }
+
 
     }
 
@@ -95,7 +89,7 @@ public class Tank {
         if (collisionDetector(position, newRotation, walls)) {
             rotation = newRotation;
         }
-//        rotation = (rotation + angle) % (2 * Math.PI);
+
     }
 
     public boolean collisionDetector(Point2D newPosition, double newrotation, ArrayList<Rectangle2D> walls) {

@@ -20,6 +20,10 @@ import java.awt.geom.AffineTransform;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 public class Game extends Application {
@@ -31,14 +35,43 @@ public class Game extends Application {
     private ArrayList<Bullet> Bullets;
     private long lastBulletTime;
     private final long BULLET_DELAY = 500;
+    private Socket socket;
+    private ObjectInputStream objectInputStream;
+    private ObjectOutputStream objectOutputStream;
 
 
-    public Game() {
+
+
+    public Game() throws IOException {
+        socket = new Socket("localhost", 1234);
+        objectInputStream = new ObjectInputStream(socket.getInputStream());
+        objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
         this.lastBulletTime = System.currentTimeMillis();
     }
+
+
+
+
     public void start(Stage stage) throws Exception {
         init();
 
+        new Thread(() -> {
+            try {
+                while (true) {
+//                    enemy = (Tank) objectInputStream.readObject();
+                    Object object = objectInputStream.readObject();
+                    if (object instanceof Tank) {
+                        System.out.println("received tank as object");
+                        enemy = (Tank) object;
+                    }
+                    objectOutputStream.writeObject(player);
+                    objectOutputStream.flush();
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+                System.out.println("problem in startReadingAndWritingToServerLoop");
+            }
+        }).start();
 
         BorderPane mainPane = new BorderPane();
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
@@ -85,22 +118,21 @@ public class Game extends Application {
 
     public void update(double deltaTime) {
         player.update();
-        enemy.update();
+//        enemy.update();
+//        try {
+//            Object o = objectInputStream.readObject();
+//            if (o instanceof Tank) {
+//                enemy = (Tank) o;
+//            }
+//        }catch (IOException | ClassNotFoundException e){
+//            e.printStackTrace();
+//        }
         for (Bullet bullet : Bullets) {
             bullet.update();
         }
         inputHandling();
         collision();
-//        if(player.getPosition().distance(enemy.getPosition()) < 100){
-//            player.takeDamageBody();//todo maak een interval zodat de tank niet te snel schade krijgt
-//            enemy.takeDamageBody();//kan veranderd worden voor een rectangle2D om zo de collision te bepalen
-//            player.pushAwayFrom(enemy);
-//            enemy.pushAwayFrom(player);
-//        }
-//        if (player.getTankHealth() <= 0 || enemy.getTankHealth() <= 0){
-//            System.out.println("Game Over");
-//                //System.exit(0);
-//        }
+
     }
 
     public void init() {
