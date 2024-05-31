@@ -44,8 +44,8 @@ public class Game extends Application {
 
     public Game() throws IOException {
         socket = new Socket("localhost", 1234);
-        objectInputStream = new ObjectInputStream(socket.getInputStream());
         objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        objectInputStream = new ObjectInputStream(socket.getInputStream());
         this.lastBulletTime = System.currentTimeMillis();
     }
 
@@ -54,24 +54,23 @@ public class Game extends Application {
 
     public void start(Stage stage) throws Exception {
         init();
-
-        new Thread(() -> {
-            try {
-                while (true) {
-//                    enemy = (Tank) objectInputStream.readObject();
-                    Object object = objectInputStream.readObject();
-                    if (object instanceof Tank) {
-                        System.out.println("received tank as object");
-                        enemy = (Tank) object;
-                    }
-                    objectOutputStream.writeObject(player);
-                    objectOutputStream.flush();
-                }
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-                System.out.println("problem in startReadingAndWritingToServerLoop");
-            }
-        }).start();
+//        new Thread(() -> {
+//            try {
+//                while (true) {
+////                    enemy = (Tank) objectInputStream.readObject();
+//                    Object object = objectInputStream.readObject();
+//                    if (object instanceof Tank) {
+//                        System.out.println("received tank as object");
+//                        enemy = (Tank) object;
+//                    }
+//                    objectOutputStream.writeObject(player);
+//                    objectOutputStream.flush();
+//                }
+//            } catch (IOException | ClassNotFoundException e) {
+//                e.printStackTrace();
+//                System.out.println("problem in startReadingAndWritingToServerLoop");
+//            }
+//        }).start();
 
         BorderPane mainPane = new BorderPane();
         canvas = new ResizableCanvas(g -> draw(g), mainPane);

@@ -20,9 +20,9 @@ public class Server {
         long currentTime = System.nanoTime();
         while (true){
             Socket player1 = serverSocket.accept();
+            match = new Match(player1);
             Socket player2 = serverSocket.accept();
-
-            match = new Match(player1, player2);
+            match.addPLayer2(player2);
 
             while (true) {
 //                long whenShouldNextTickRun = startTime + MILISECONDS_PER_FRAME;
@@ -37,12 +37,22 @@ public class Server {
 //                    }
 //                    continue;
 //                }
+                while (!match.areBothPlayersConnected()) {
+                    System.out.println("waiting for both players to connect");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                while (true){
                 try {
                     System.out.println("match.update()");
                     match.update();
                 }catch (IOException | ClassNotFoundException e){
                     e.printStackTrace();
                     continue;
+                }
                 }
 //                startTime = System.nanoTime();
             }

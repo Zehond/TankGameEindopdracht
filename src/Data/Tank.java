@@ -9,10 +9,11 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class Tank {
+public class Tank implements Serializable {
     private Point2D position;
     private double size;
     private double rotation;
