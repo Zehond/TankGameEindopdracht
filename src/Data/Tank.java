@@ -152,9 +152,9 @@ public class Tank {
         return test.createTransformedShape(formHitbox);
     }
 
-    public void takeDamageBody() {
-        tankHealth %= 5;
-    }
+//    public void takeDamageBody() {
+//        tankHealth %= 5;
+//    }
 
     public void pushAwayFrom(Tank other) {
         double dx = position.getX() - other.getPosition().getX();
@@ -171,6 +171,7 @@ public class Tank {
 
     public void gotHit(){
         this.tankHealth -= 20;
+        System.out.println("damage");
     }
 
     public boolean HitsTank(Bullet bullet) {

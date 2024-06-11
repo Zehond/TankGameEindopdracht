@@ -7,8 +7,6 @@ import Data.Tank;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -19,9 +17,11 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
+
 public class Game extends Application {
     private Map map;
     private Tank player;
@@ -31,6 +31,11 @@ public class Game extends Application {
     private ArrayList<Bullet> Bullets;
     private long lastBulletTime;
     private final long BULLET_DELAY = 500;
+    private int port = 8000;
+    private String host ="localhost";
+    private DataInputStream in;
+    private DataOutputStream out;
+    private Socket socket;
 
 
     public Game() {
@@ -91,6 +96,7 @@ public class Game extends Application {
         }
         inputHandling();
         collision();
+        serverConnection();
 //        if(player.getPosition().distance(enemy.getPosition()) < 100){
 //            player.takeDamageBody();//todo maak een interval zodat de tank niet te snel schade krijgt
 //            enemy.takeDamageBody();//kan veranderd worden voor een rectangle2D om zo de collision te bepalen
@@ -109,6 +115,13 @@ public class Game extends Application {
         this.map = new Map(new Point2D.Double(1920/2.0, 1080/2.0));
         this.player = new Tank(this.map.getSpawnPoint(), true);
         this.enemy = new Tank(this.map.getSpawnPoint(), false);
+        try {
+            socket = new Socket(host, port);
+            out = new DataOutputStream(socket.getOutputStream());
+            in = new DataInputStream(socket.getInputStream());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void addBullet(Point2D position, double direction) {
@@ -127,8 +140,9 @@ public class Game extends Application {
         } else if (inputHandler.isPressed(KeyCode.A)){
             player.turnLeft(map.getWalls());
         }
-        if (inputHandler.isPressed(KeyCode.SPACE ) && currentTime - lastBulletTime >= BULLET_DELAY){             //TODO zet er een delay op
+        if (inputHandler.isPressed(KeyCode.SPACE ) && currentTime - lastBulletTime >= BULLET_DELAY) { 
             this.addBullet(player.getPosition(), player.getRotation());
+//            this.addBullet(enemy.getPosition(), enemy.getRotation());
             lastBulletTime = currentTime;
         }
     }
@@ -159,8 +173,20 @@ public class Game extends Application {
         this.Bullets = test;
     }
 
-    public void BulletTankCollision() {
+    public void serverConnection() {
+        try {
+            out.writeDouble(player.getPosition().getX());
+            out.writeDouble(player.getPosition().getY());
+            out.writeDouble(player.getRotation());
 
+            double x = in.readDouble();
+            double y = in.readDouble();
+            double rotation = in.readDouble();
+            enemy.setPosition(new Point2D.Double(x, y));
+            enemy.setRotation(rotation);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args){
