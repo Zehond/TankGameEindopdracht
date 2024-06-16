@@ -17,7 +17,6 @@ public class Tank {
     private double size;
     private double rotation;
     private boolean isPlayer;
-    private int tankHealth;
     private int speed;
     double angle = Math.PI / 90;
     private BufferedImage image;
@@ -32,7 +31,6 @@ public class Tank {
         this.position = position;
         size = 10;
         rotation = 0;
-        tankHealth = 100;
         speed = 1;
         isPlayer = player;
         formHitbox = new Rectangle2D.Double(0, 0, 54, 40);
@@ -127,15 +125,13 @@ public class Tank {
 
         hitbox = affineTransform.createTransformedShape(formHitbox);
 
-        if (tankHealth > 0) {
-            graphics.setColor(Color.black);
-            graphics.draw(hitbox);
-            graphics.setColor(Color.yellow);
-            if (newHitBox != null) {
-                graphics.draw(newHitBox);
-            }
-            graphics.drawImage(tankSprite, affineTransform, null);
+        graphics.setColor(Color.black);
+        graphics.draw(hitbox);
+        graphics.setColor(Color.yellow);
+        if (newHitBox != null) {
+            graphics.draw(newHitBox);
         }
+        graphics.drawImage(tankSprite, affineTransform, null);
     }
 
     public Shape affinetransformTest(Point2D newPoint, double newRotation) {
@@ -168,12 +164,6 @@ public class Tank {
                 position.getY() + ny * speed));
     }
 
-
-    public void gotHit(){
-        this.tankHealth -= 20;
-        System.out.println("damage");
-    }
-
     public boolean HitsTank(Bullet bullet) {
         if (hitbox.contains(bullet.getPosition().getX(), bullet.getPosition().getY())) {
             return true;
@@ -203,14 +193,6 @@ public class Tank {
 
     public void setRotation(double rotation) {
         this.rotation = rotation;
-    }
-
-    public int getTankHealth() {
-        return tankHealth;
-    }
-
-    public void setTankHealth(int tankHealth) {
-        this.tankHealth = tankHealth;
     }
 
     public int getSpeed() {

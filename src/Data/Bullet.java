@@ -5,8 +5,9 @@ import org.jfree.fx.FXGraphics2D;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 
-public class Bullet {
+public class Bullet implements Serializable {
     private Point2D position;
     private Ellipse2D sprite;
     private double speed;
@@ -37,5 +38,9 @@ public class Bullet {
 
     public Point2D getPosition() {
         return position;
+    }
+
+    public double getDirection() {
+        return direction;
     }
 }
