@@ -24,6 +24,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Game extends Application {
     private Map map;
@@ -81,7 +82,7 @@ public class Game extends Application {
         BorderPane startPane = new BorderPane();
         startPane.setCenter(new Label("searching for player"));
 
-        Scene startScene = new Scene(startPane);
+        Scene startScene = new Scene(startPane, 1920, 1080);
 
         stage.setScene(startScene);
         this.stage = stage;
@@ -122,11 +123,11 @@ public class Game extends Application {
                         enemy.setRotation(rot);
                         enemy.setPosition(new Point2D.Double(x, y));
 
-                        out2.writeObject(bullets);
-                        bullets = (ArrayList<Bullet>) in2.readObject();
+//                        out2.writeObject(bullets);
+//                        bullets = (ArrayList<Bullet>) in2.readObject();
 
                         if (hit) {
-                            out.writeBoolean(false);
+                            out.writeBoolean(true);
                             hit = false;
                         } else {
                             out.writeBoolean(false);
@@ -161,9 +162,11 @@ public class Game extends Application {
 
         this.map.draw(graphics);
 
-        for (Bullet bullet : bullets) {
-            bullet.draw(graphics);
-        }
+        bullets.forEach(bullet -> bullet.draw(graphics));
+
+//        for (Bullet bullet : bullets) {
+//            bullet.draw(graphics);
+//        }
 
         this.player.draw(graphics);
         this.enemy.draw(graphics);
@@ -210,7 +213,7 @@ public class Game extends Application {
             newPane.setCenter(new Label("Its a draw!"));
         }
         newPane.setTop(new Label(pointsPlayer + " - " + pointsEnemy));
-        Scene newScene = new Scene(newPane);
+        Scene newScene = new Scene(newPane,200,200);
         stage.setScene(newScene);
     }
 
@@ -237,25 +240,36 @@ public class Game extends Application {
     }
 
     public void bulletWallCollision() {
-        ArrayList<Bullet> test = new ArrayList<>();
-        boolean hasHitSomething;
-        for (Bullet bullet : bullets) {
-            hasHitSomething = false;
-            for (Shape shape : map.getWalls()) {
-                if (shape.contains(bullet.getPosition())) {
-                    hasHitSomething = true;
-                }
-            }
-            if (enemy.HitsTank(bullet)) {
-                hasHitSomething = true;
-                hit = true;
-            }
-
-            if (!hasHitSomething) {
-                test.add(bullet);
-            }
-        }
-        this.bullets = test;
+//        ArrayList<Bullet> test = new ArrayList<>();
+//        boolean hasHitSomething;
+//        for (Bullet bullet : bullets) {
+//            hasHitSomething = false;
+//            for (Shape shape : map.getWalls()) {
+//                if (shape.contains(bullet.getPosition())) {
+//                    hasHitSomething = true;
+//                }
+//            }
+//            if (enemy.HitsTank(bullet)) {
+//                hasHitSomething = true;
+//                hit = true;
+//            }
+//
+//            if (!hasHitSomething) {
+//                test.add(bullet);
+//            }
+//        }
+//        this.bullets = test;
+        bullets = bullets.stream()
+                .filter(bullet -> {
+                    boolean hasHitSomething = map.getWalls().stream()
+                            .anyMatch(shape -> shape.contains(bullet.getPosition()));
+                    if (!hasHitSomething && enemy.HitsTank(bullet)) {
+                        hasHitSomething = true;
+                        hit = true;
+                    }
+                    return !hasHitSomething;
+                })
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public static void main(String[] args){

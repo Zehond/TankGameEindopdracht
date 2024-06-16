@@ -87,32 +87,32 @@ public class Match implements Runnable {
                 out2.writeDouble(YPlayer1);
 
                 //bullets
-                bulletsP1 = (ArrayList<Bullet>) OIn1.readObject();
+//                bulletsP1 = (ArrayList<Bullet>) OIn1.readObject();
+//
+//                bulletsP2 = (ArrayList<Bullet>) OIn2.readObject();
+//
+//                bulletsP1.addAll(bulletsP2);
+//
+//                ArrayList<Bullet> bullets = new ArrayList<>();
+//                bullets.addAll(bulletsP1);
+//                bullets.addAll(bulletsP2);
+//
+//                boolean alreadyInList = false;
+//
+//                for (Bullet bullet : bulletsP2) {
+//                    for (Bullet bullet1 : bullets) {
+//                        if (bullet.getPosition().equals(bullet1.getPosition())&& bullet.getDirection() == bullet1.getDirection()) {
+//                            alreadyInList = true;
+//                        }
+//                    }
+//                    if (!alreadyInList) {
+//                        bullets.add(bullet);
+//                    }
+//                    alreadyInList = false;
+//                }
 
-                bulletsP2 = (ArrayList<Bullet>) OIn2.readObject();
-
-                bulletsP1.addAll(bulletsP2);
-
-                ArrayList<Bullet> bullets = new ArrayList<>();
-                bullets.addAll(bulletsP1);
-                bullets.addAll(bulletsP2);
-
-                boolean alreadyInList = false;
-
-                for (Bullet bullet : bulletsP2) {
-                    for (Bullet bullet1 : bullets) {
-                        if (bullet.getPosition().equals(bullet1.getPosition())&& bullet.getDirection() == bullet1.getDirection()) {
-                            alreadyInList = true;
-                        }
-                    }
-                    if (!alreadyInList) {
-                        bullets.add(bullet);
-                    }
-                    alreadyInList = false;
-                }
-
-                OOut1.writeObject(bullets);
-                OOut2.writeObject(bullets);
+//                OOut1.writeObject(bullets);
+//                OOut2.writeObject(bullets);
 
                 if (in1.readBoolean()) {
                     System.out.println("player 2 hit");
