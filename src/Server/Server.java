@@ -22,8 +22,6 @@ public class Server {
         }
         loop();
     }
-
-
     public static void loop() {
         ExecutorService service = Executors.newCachedThreadPool();
         while (true) {

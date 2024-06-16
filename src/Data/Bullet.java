@@ -5,6 +5,7 @@ import org.jfree.fx.FXGraphics2D;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
 public class Bullet implements Serializable {
@@ -27,10 +28,11 @@ public class Bullet implements Serializable {
         double ny = speed * Math.sin(direction);
 
         position.setLocation(position.getX() + nx, position.getY() + ny);
-        sprite = new Ellipse2D.Double(position.getX(), position.getY(), size, size);
     }
 
     public void draw(FXGraphics2D graphics2D) {
+        sprite = new Ellipse2D.Double(position.getX(), position.getY(), size, size);
+
         graphics2D.setColor(Color.black);
         graphics2D.draw(sprite);
         graphics2D.fill(sprite);

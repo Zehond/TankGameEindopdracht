@@ -33,14 +33,15 @@ public class Game extends Application {
     private InputHandler inputHandler;
     private ResizableCanvas canvas;
     private ArrayList<Bullet> bullets;
+    private ArrayList<Bullet> serverBullets;
     private long lastBulletTime;
     private final long BULLET_DELAY = 500;
     private int port = 8000;
     private String host ="localhost";
     private DataInputStream in;
     private DataOutputStream out;
-    private ObjectInputStream in2;
-    private ObjectOutputStream out2;
+    private ObjectInputStream OIn;
+    private ObjectOutputStream OOut;
     private Socket socket;
     private boolean hit;
     private double status = 3;
@@ -76,7 +77,7 @@ public class Game extends Application {
             }
         }.start();
 
-        scene = new Scene(mainPane);
+        scene = new Scene(mainPane, 1920, 1080);
 
 
         BorderPane startPane = new BorderPane();
@@ -97,19 +98,15 @@ public class Game extends Application {
                 socket = new Socket(host, port);
                 out = new DataOutputStream(socket.getOutputStream());
                 in = new DataInputStream(socket.getInputStream());
-                out2 = new ObjectOutputStream(socket.getOutputStream());
-                in2 = new ObjectInputStream(socket.getInputStream());
+                OIn = new ObjectInputStream(socket.getInputStream());
+                OOut = new ObjectOutputStream(socket.getOutputStream());
 
                 double input = in.readDouble();
                 System.out.println(input);
 
-                //TODO change scene to game
-                //TODO bullets
-                //TODO Score
-
                 if (input == 1.1) {
                     status = 2;
-                    player.setPosition((Point2D) in2.readObject());
+                    player.setPosition((Point2D) OIn.readObject());
                     while (true) {
 
                         out.writeDouble(player.getRotation());
@@ -118,13 +115,11 @@ public class Game extends Application {
                         double rot = in.readDouble();
                         double x = in.readDouble();
                         double y = in.readDouble();
-//                        System.out.println(rot);
-//                        System.out.println(x + ", " + y);
                         enemy.setRotation(rot);
                         enemy.setPosition(new Point2D.Double(x, y));
 
-//                        out2.writeObject(bullets);
-//                        bullets = (ArrayList<Bullet>) in2.readObject();
+                        OOut.writeObject(bullets);
+                        serverBullets = (ArrayList<Bullet>) OIn.readObject();
 
                         if (hit) {
                             out.writeBoolean(true);
@@ -140,7 +135,7 @@ public class Game extends Application {
                             pointsPlayer++;
                         }
                         if (status != 2) {
-                            player.setPosition((Point2D) in2.readObject());
+                            player.setPosition((Point2D) OIn.readObject());
                             player.setRotation(0);
                             if (in.readDouble() == 1.1) {
                                 status = 2;
@@ -163,10 +158,7 @@ public class Game extends Application {
         this.map.draw(graphics);
 
         bullets.forEach(bullet -> bullet.draw(graphics));
-
-//        for (Bullet bullet : bullets) {
-//            bullet.draw(graphics);
-//        }
+        serverBullets.forEach(bullet -> bullet.draw(graphics));
 
         this.player.draw(graphics);
         this.enemy.draw(graphics);
@@ -174,18 +166,20 @@ public class Game extends Application {
 
     public void update(double deltaTime) {
         sceneChanger();
-        player.update();
-        enemy.update();
         for (Bullet bullet : bullets) {
             bullet.update();
         }
+        for (Bullet bullet : serverBullets) {
+            bullet.update();
+        }
         inputHandling();
-        collision();
+        bulletWallCollision();
     }
 
     public void init() {
         inputHandler = new InputHandler();
         bullets = new ArrayList<>();
+        serverBullets = new ArrayList<>();
         this.map = new Map(new Point2D.Double(1920/2.0, 1080/2.0));
         this.player = new Tank(this.map.getSpawnPoint(), true);
         this.enemy = new Tank(this.map.getSpawnPoint(), false);
@@ -197,7 +191,6 @@ public class Game extends Application {
 
     private void sceneChanger() {
         if (status == 2) {
-
             stage.setScene(scene);
             return;
         }
@@ -213,7 +206,7 @@ public class Game extends Application {
             newPane.setCenter(new Label("Its a draw!"));
         }
         newPane.setTop(new Label(pointsPlayer + " - " + pointsEnemy));
-        Scene newScene = new Scene(newPane,200,200);
+        Scene newScene = new Scene(newPane, 500, 500);
         stage.setScene(newScene);
     }
 
@@ -235,30 +228,7 @@ public class Game extends Application {
         }
     }
 
-    public void collision() {
-        bulletWallCollision();
-    }
-
     public void bulletWallCollision() {
-//        ArrayList<Bullet> test = new ArrayList<>();
-//        boolean hasHitSomething;
-//        for (Bullet bullet : bullets) {
-//            hasHitSomething = false;
-//            for (Shape shape : map.getWalls()) {
-//                if (shape.contains(bullet.getPosition())) {
-//                    hasHitSomething = true;
-//                }
-//            }
-//            if (enemy.HitsTank(bullet)) {
-//                hasHitSomething = true;
-//                hit = true;
-//            }
-//
-//            if (!hasHitSomething) {
-//                test.add(bullet);
-//            }
-//        }
-//        this.bullets = test;
         bullets = bullets.stream()
                 .filter(bullet -> {
                     boolean hasHitSomething = map.getWalls().stream()

@@ -19,10 +19,10 @@ public class Match implements Runnable {
     private DataOutputStream out1;
     private DataInputStream in2;
     private DataOutputStream out2;
-    private ObjectInputStream OIn1;
     private ObjectOutputStream OOut1;
-    private ObjectInputStream OIn2;
     private ObjectOutputStream OOut2;
+    private ObjectInputStream OIn1;
+    private ObjectInputStream OIn2;
     private int hpP1;
     private int hpP2;
     private Map map;
@@ -87,32 +87,11 @@ public class Match implements Runnable {
                 out2.writeDouble(YPlayer1);
 
                 //bullets
-//                bulletsP1 = (ArrayList<Bullet>) OIn1.readObject();
-//
-//                bulletsP2 = (ArrayList<Bullet>) OIn2.readObject();
-//
-//                bulletsP1.addAll(bulletsP2);
-//
-//                ArrayList<Bullet> bullets = new ArrayList<>();
-//                bullets.addAll(bulletsP1);
-//                bullets.addAll(bulletsP2);
-//
-//                boolean alreadyInList = false;
-//
-//                for (Bullet bullet : bulletsP2) {
-//                    for (Bullet bullet1 : bullets) {
-//                        if (bullet.getPosition().equals(bullet1.getPosition())&& bullet.getDirection() == bullet1.getDirection()) {
-//                            alreadyInList = true;
-//                        }
-//                    }
-//                    if (!alreadyInList) {
-//                        bullets.add(bullet);
-//                    }
-//                    alreadyInList = false;
-//                }
+                bulletsP1 = (ArrayList<Bullet>) OIn1.readObject();
+                bulletsP2 = (ArrayList<Bullet>) OIn2.readObject();
 
-//                OOut1.writeObject(bullets);
-//                OOut2.writeObject(bullets);
+                OOut2.writeObject(bulletsP1);
+                OOut1.writeObject(bulletsP2);
 
                 if (in1.readBoolean()) {
                     System.out.println("player 2 hit");
