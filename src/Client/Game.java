@@ -199,13 +199,12 @@ public class Game extends Application {
         }
         BorderPane newPane = new BorderPane();
         if (status == -1) {
-            newPane.setCenter(new Label("You lost..."));
+            newPane.setCenter(new Label("You lost...\n" + pointsPlayer + " - " + pointsEnemy));
         } else if (status == 1) {
-            newPane.setCenter(new Label("You won!"));
+            newPane.setCenter(new Label("You won!\n" + pointsPlayer + " - " + pointsEnemy));
         } else if (status == 0) {
-            newPane.setCenter(new Label("Its a draw!"));
+            newPane.setCenter(new Label("Its a draw!\n" + pointsPlayer + " - " + pointsEnemy));
         }
-        newPane.setTop(new Label(pointsPlayer + " - " + pointsEnemy));
         Scene newScene = new Scene(newPane, 500, 500);
         stage.setScene(newScene);
     }
